@@ -35,7 +35,7 @@ options(error = function() {
 })
 #------------------------------------------------------------------------------
 
-ksemilla  <- 102191
+ksemilla  <- 100019
 
 kcrossvalidation_folds  <- 5  #En caso que se haga cross validation, se usa esta cantidad de folds
 
@@ -330,7 +330,7 @@ setwd("~/buckets/b1/")
 
 #cargo el dataset donde voy a entrenar
 #esta en la carpeta del exp_input y siempre se llama  dataset_training.csv.gz
-dataset_input  <- paste0( "./exp/", PARAM$exp_input, "/dataset_training.csv.gz" )
+dataset_input  <- paste0( "./exp/exp_col/", PARAM$exp_input, "/dataset_training.csv.gz" )
 dataset  <- fread( dataset_input )
 
 #Verificaciones
@@ -340,8 +340,8 @@ if( ! ("fold_test"     %in% colnames(dataset) ) ) stop("Error, el dataset no tie
 if( dataset[ fold_train==1, .N ] == 0 ) stop("Error, en el dataset no hay fold_train==1 \n")
 
 #creo la carpeta donde va el experimento
-dir.create( paste0( "./exp/", PARAM$experimento, "/"), showWarnings = FALSE )
-setwd(paste0( "./exp/", PARAM$experimento, "/"))   #Establezco el Working Directory DEL EXPERIMENTO
+dir.create( paste0( "./exp/exp_col/", PARAM$experimento, "/"), showWarnings = FALSE )
+setwd(paste0( "./exp/exp_col/", PARAM$experimento, "/"))   #Establezco el Working Directory DEL EXPERIMENTO
 
 
 cat( PARAM$exp_input,
@@ -363,9 +363,9 @@ dtrain  <- lgb.Dataset( data=    data.matrix( dataset[ fold_train==1, campos_bue
                       )
 
 
-kvalidate  <- FALSE
-ktest  <- FALSE
-kcrossvalidation  <- TRUE
+kvalidate  <- TRUE
+ktest  <- TRUE
+kcrossvalidation  <- FALSE
 
 #Si hay que hacer validacion
 if( dataset[ fold_train==0 & fold_test==0 & fold_validate==1, .N ] > 0 )

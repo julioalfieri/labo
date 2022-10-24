@@ -24,10 +24,10 @@ PARAM$experimento <- "FE9250"
 PARAM$exp_input  <- "DR9141"
 
 PARAM$lag1  <- FALSE
-PARAM$lag2  <- TRUE
-PARAM$Tendencias  <- TRUE
+PARAM$lag2  <- FALSE
+PARAM$Tendencias  <- FALSE
 PARAM$RandomForest  <- FALSE          #No se puede poner en TRUE para la entrega oficial de la Tercera Competencia
-PARAM$CanaritosAsesinos  <- TRUE
+PARAM$CanaritosAsesinos  <- FALSE
 # FIN Parametros del script
 
 #------------------------------------------------------------------------------
@@ -308,17 +308,16 @@ CanaritosAsesinos  <- function( canaritos_ratio=0.2 )
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
-setwd("C:\\Users\\alfie\\OneDrive\\Documentos\\Maestria_DM\\Materias\\DMEyF_22\\")
-#setwd( "~/buckets/b1/" )
+setwd( "~/buckets/b1/" )
 
 #cargo el dataset donde voy a entrenar
 #esta en la carpeta del exp_input y siempre se llama  dataset.csv.gz
-dataset_input  <- paste0( "./exp/", PARAM$exp_input, "/dataset_rcf_fe.csv.gz" )
+dataset_input  <- paste0( "./exp/exp_col/", PARAM$exp_input, "/dataset.csv.gz" )
 dataset  <- fread( dataset_input )
 
 #creo la carpeta donde va el experimento
-dir.create( paste0( "./exp/", PARAM$experimento, "/"), showWarnings = FALSE )
-setwd(paste0( "./exp/", PARAM$experimento, "/"))   #Establezco el Working Directory DEL EXPERIMENTO
+dir.create( paste0( "./exp/exp_col/", PARAM$experimento, "/"), showWarnings = FALSE )
+setwd(paste0( "./exp/exp_col/", PARAM$experimento, "/"))   #Establezco el Working Directory DEL EXPERIMENTO
 
 #--------------------------------------
 #estas son las columnas a las que se puede agregar lags o media moviles ( todas menos las obvias )
@@ -372,8 +371,8 @@ if( PARAM$Tendencias )
                       cols= cols_lagueables,
                       ventana=   6,      # 6 meses de historia
                       tendencia= TRUE,
-                      minimo=    FALSE,
-                      maximo=    FALSE,
+                      minimo=    TRUE,
+                      maximo=    TRUE,
                       promedio=  TRUE,
                       ratioavg=  FALSE,
                       ratiomax=  FALSE  )
@@ -406,7 +405,7 @@ if( PARAM$CanaritosAsesinos )
 #------------------------------------------------------------------------------
 #grabo el dataset
 fwrite( dataset,
-        "dataset_rcf_fe_l2_t.csv.gz",
+        "dataset.csv.gz",
         logical01= TRUE,
         sep= "," )
 ncol(dataset)
