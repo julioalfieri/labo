@@ -40,8 +40,8 @@ fganancia_logistic_xgboost  <- function( probs, datos )
 #------------------------------------------------------------------------------
 
 setwd("~/buckets/b1/")
-
-dataset <- fread( "./datasets/competencia3_2022.csv.gz")
+dataset <- fread("./exp/DR9143/dataset.csv.gz")
+#dataset <- fread( "./datasets/competencia3_2022.csv.gz")
 
 dataset  <- dataset[  foto_mes==202105 ]
 gc()
