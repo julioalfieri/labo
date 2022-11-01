@@ -6,7 +6,7 @@ require("data.table")
 require("dplyr")
 require(ggplot2)
 
-setwd("C:\\Users\\alfie\\OneDrive\\Documentos\\Maestria_DM\\Materias\\DMEyF_22\\")
+setwd( "~/buckets/b1/" )
 dataset <- fread("datasets/competencia3_2022.csv.gz")
 
 data_eval  <- dataset[ foto_mes== 202105  ]
@@ -14,9 +14,9 @@ data_eval <- data_eval[,c("numero_de_cliente","clase_ternaria")]
 
 #cargo cada predicción por número de corte y genero un dataset por cada semilla. Luego repito por cada BO.
 
-semillas <- c("_100019", "_110119", "_111119", "_111919", "_900019")
-BOS <- c('_01_027_','_02_053_')
-cortes <- c('07000','07500','08000','08500','09000','09500','10000','10500','11000')
+semillas <- c("_100019", "_110119", "_111119", "_111919", "_900019", "_688201", "_869293", "_840341", "_550439", "_482861")
+BOS <- c('_36_')
+cortes <- c('08000','08500','09000','09500','10000','10500','11000', '12000', '12500', '13000')
 nombre_base <- 'ZZ9410'
 
 BO_idx <- 1
