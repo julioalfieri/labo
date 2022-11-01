@@ -31,7 +31,7 @@ PARAM$train$sampling_total  <- 1.0  # 1.0 significa que NO se hace sampling tota
 PARAM$train$undersampling_mayoritaria  <- 1.0   # 1.0 significa NO undersampling ,  0.1  es quedarse con el 10% de los CONTINUA
 
 #Atencion, las semillas deben ser distintas
-PARAM$train$semilla_sampling  <- 110119
+PARAM$train$semilla_sampling  <- 100019
 PARAM$train$semilla_under     <- 688201
 # FIN Parametros del script
 
@@ -106,4 +106,5 @@ fwrite( dataset[ fold_train + fold_validate + fold_test >= 1 , ],
         file= "dataset_training.csv.gz",
         logical01= TRUE,
         sep= "," )
+
 

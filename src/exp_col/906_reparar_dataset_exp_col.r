@@ -216,8 +216,8 @@ dataset[  , tmobile_app := NULL ]
 
 
 #creo la carpeta donde va el experimento
-dir.create( paste0( "./exp/exp_col", PARAM$experimento, "/"), showWarnings = FALSE )
-setwd(paste0( "./exp/exp_col", PARAM$experimento, "/"))   #Establezco el Working Directory DEL EXPERIMENTO
+dir.create( paste0( "./exp/exp_col/", PARAM$experimento, "/"), showWarnings = FALSE )
+setwd(paste0( "./exp/exp_col/", PARAM$experimento, "/"))   #Establezco el Working Directory DEL EXPERIMENTO
 
 setorder( dataset, numero_de_cliente, foto_mes )
 
