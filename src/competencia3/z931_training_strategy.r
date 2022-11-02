@@ -25,8 +25,8 @@ PARAM$final_train  <- c( 202103, 202104, 202105 )
 PARAM$train$training     <- c( 202101, 202102, 202103 )
 PARAM$train$validation   <- c( 202104 )
 PARAM$train$testing      <- c( 202105 )
-PARAM$train$undersampling  <- 1.0   # 1.0 significa NO undersampling ,  0.1  es quedarse con el 10% de los CONTINUA
-PARAM$train$semilla  <- 102191
+PARAM$train$undersampling  <- 0.1   # 1.0 significa NO undersampling ,  0.1  es quedarse con el 10% de los CONTINUA ~1:10k
+PARAM$train$semilla  <- 100019      # 4176782 Continua , 38478 B+1|B+2 originalmente
 # FIN Parametros del script
 
 
@@ -41,14 +41,14 @@ options(error = function() {
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
-
-setwd( "~/buckets/b1/" )
+setwd("C:\\Users\\alfie\\OneDrive\\Documentos\\Maestria_DM\\Materias\\DMEyF_22\\")
+#setwd( "~/buckets/b1/" )
 
 #cargo el dataset donde voy a entrenar
 #esta en la carpeta del exp_input y siempre se llama  dataset.csv.gz
-dataset_input  <- paste0( "./exp/", PARAM$exp_input, "/dataset.csv.gz" )
+dataset_input  <- paste0( "./exp/", PARAM$exp_input, "/dataset_fzr_L2_T.csv.gz" )
 dataset  <- fread( dataset_input )
-
+dataset_input 
 
 #creo la carpeta donde va el experimento
 dir.create( paste0( "./exp/", PARAM$experimento, "/"), showWarnings = FALSE )
@@ -59,13 +59,13 @@ setorder( dataset, foto_mes, numero_de_cliente )
 
 #grabo los datos del futuro
 fwrite( dataset[ foto_mes %in% PARAM$future, ],
-        file= "dataset_future.csv.gz",
+        file= "dataset_future_fzr_L2_T.csv.gz",
         logical01= TRUE,
         sep= "," )
 
 #grabo los datos donde voy a entrenar los Final Models
 fwrite( dataset[ foto_mes %in% PARAM$final_train, ],
-        file= "dataset_train_final.csv.gz",
+        file= "dataset_train_final_fzr_L2_T.csv.gz",
         logical01= TRUE,
         sep= "," )
 
@@ -88,7 +88,7 @@ dataset[ foto_mes %in% PARAM$train$testing, fold_test := 1L ]
 
 
 fwrite( dataset[ fold_train + fold_validate + fold_test >= 1 , ],
-        file= "dataset_training.csv.gz",
+        file= "dataset_training_fzr_L2_T.csv.gz",
         logical01= TRUE,
         sep= "," )
 

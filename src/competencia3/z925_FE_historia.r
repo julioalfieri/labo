@@ -23,11 +23,11 @@ PARAM$experimento <- "FE9250"
 
 PARAM$exp_input  <- "DR9141"
 
-PARAM$lag1  <- TRUE
-PARAM$lag2  <- FALSE
+PARAM$lag1  <- FALSE
+PARAM$lag2  <- TRUE
 PARAM$Tendencias  <- TRUE
 PARAM$RandomForest  <- FALSE          #No se puede poner en TRUE para la entrega oficial de la Tercera Competencia
-PARAM$CanaritosAsesinos  <- FALSE
+PARAM$CanaritosAsesinos  <- TRUE
 # FIN Parametros del script
 
 #------------------------------------------------------------------------------
@@ -308,15 +308,13 @@ CanaritosAsesinos  <- function( canaritos_ratio=0.2 )
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
-
-setwd( "~/buckets/b1/" )
+setwd("C:\\Users\\alfie\\OneDrive\\Documentos\\Maestria_DM\\Materias\\DMEyF_22\\")
+#setwd( "~/buckets/b1/" )
 
 #cargo el dataset donde voy a entrenar
 #esta en la carpeta del exp_input y siempre se llama  dataset.csv.gz
-dataset_input  <- paste0( "./exp/", PARAM$exp_input, "/dataset.csv.gz" )
+dataset_input  <- paste0( "./exp/", PARAM$exp_input, "/dataset_rcf_fe.csv.gz" )
 dataset  <- fread( dataset_input )
-
-
 
 #creo la carpeta donde va el experimento
 dir.create( paste0( "./exp/", PARAM$experimento, "/"), showWarnings = FALSE )
@@ -408,6 +406,8 @@ if( PARAM$CanaritosAsesinos )
 #------------------------------------------------------------------------------
 #grabo el dataset
 fwrite( dataset,
-        "dataset.csv.gz",
+        "dataset_rcf_fe_l2_t.csv.gz",
         logical01= TRUE,
         sep= "," )
+ncol(dataset)
+colnames(dataset)

@@ -15,8 +15,8 @@ require("data.table")
 
 #Parametros del script
 PARAM  <- list()
-PARAM$experimento  <- "CA9050"
-PARAM$dataset  <- "./datasets/competencia3_2022.csv.gz"
+PARAM$experimento  <- "CA9050_2"
+PARAM$dataset  <- "./datasets/dataset.csv.gz"
 # FIN Parametros del script
 
 #------------------------------------------------------------------------------
@@ -24,8 +24,8 @@ PARAM$dataset  <- "./datasets/competencia3_2022.csv.gz"
 #Aqui comienza el programa
 
 #copio si hace falta el dataset
-
-setwd("~/buckets/b1/")
+setwd("C:\\Users\\alfie\\OneDrive\\Documentos\\Maestria_DM\\Materias\\DMEyF_22\\")
+#setwd("~/buckets/b1/")
 
 #cargo el dataset
 dataset  <- fread( PARAM$dataset )   #donde entreno

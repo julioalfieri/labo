@@ -19,7 +19,7 @@ PARAM$experimento  <- "DR9141"
 PARAM$exp_input  <- "CA9060"
 
 #valores posibles  "ninguno" "rank_simple" , "rank_cero_fijo" , "deflacion"
-PARAM$metodo  <- "deflacion"
+PARAM$metodo  <- "rank_cero_fijo"
 # FIN Parametros del script
 
 
@@ -100,7 +100,95 @@ AgregarVariables  <- function( dataset )
   dataset[ , vmr_mpagominimo         := vm_mpagominimo  / vm_mlimitecompra ]
 
   #Aqui debe usted agregar sus propias nuevas variables
-
+  ## FE
+  #Predicados
+  dataset[  , predi_1 :=  as.integer( mcaja_ahorro >= 259.94 & mtarjeta_visa_consumo >= 2003.7  & mpasivos_margen >= 231.5)]
+  dataset[  , predi_2 :=  as.integer( mcaja_ahorro >= 259.94 & mtarjeta_visa_consumo >= 2003.7  & mpasivos_margen < 231.5)]
+  dataset[  , predi_3 :=  as.integer( mcaja_ahorro >= 259.94 & mtarjeta_visa_consumo < 2003.7  & cpayroll_trx  >= 1)]
+  dataset[  , predi_4 :=  as.integer( mcaja_ahorro >= 259.94 & mtarjeta_visa_consumo < 2003.7  & cpayroll_trx  < 1)]
+  dataset[  , predi_5 :=  as.integer( mcaja_ahorro < 259.94 & mtarjeta_visa_consumo >= 857.2  & Visa_msaldototal  >= 7919.8)] # & !is.na(Visa_msaldototal)
+  dataset[  , predi_6 :=  as.integer( mcaja_ahorro < 259.94 & mtarjeta_visa_consumo >= 857.2  & Visa_msaldototal  < 7919.8)]  # | is.na(Visa_msaldototal)
+  dataset[  , predi_7 :=  as.integer( mcaja_ahorro < 259.94 & mtarjeta_visa_consumo < 857.2  & mprestamos_personales  >= 14858)]
+  dataset[  , predi_8 :=  as.integer( mcaja_ahorro < 259.94 & mtarjeta_visa_consumo < 857.2  & mprestamos_personales  < 14858)]
+  
+  #Cocientes
+  dataset[ , cociente_1 := (ctrx_quarter/mcuentas_saldo) ]
+  dataset[ , cociente_2 := (ctrx_quarter/Visa_status) ]
+  dataset[ , cociente_3 := (ctrx_quarter/Master_status) ]
+  dataset[ , cociente_4 := (ctrx_quarter/cprestamos_personales) ]
+  dataset[ , cociente_5 := (ctrx_quarter/mprestamos_personales) ]
+  dataset[ , cociente_6 := (ctrx_quarter/ctarjeta_master_debitos_automaticos) ]
+  dataset[ , cociente_7 := (ctrx_quarter/mcaja_ahorro) ]
+  dataset[ , cociente_8 := (ctrx_quarter/mpasivos_margen) ]
+  dataset[ , cociente_9 := (ctrx_quarter/mrentabilidad) ]
+  dataset[ , cociente_10 := (ctrx_quarter/cdescubierto_preacordado) ]
+  dataset[ , cociente_11 := (ctrx_quarter/cpayroll_trx) ]
+  
+  dataset[ , cociente_12 := (mcuentas_saldo/Visa_status) ]
+  dataset[ , cociente_13 := (mcuentas_saldo/Master_status) ]
+  dataset[ , cociente_14 := (mcuentas_saldo/cprestamos_personales) ]
+  dataset[ , cociente_15 := (mcuentas_saldo/mprestamos_personales) ]
+  dataset[ , cociente_16 := (mcuentas_saldo/ctarjeta_master_debitos_automaticos) ]
+  dataset[ , cociente_17 := (mcuentas_saldo/mcaja_ahorro) ]
+  dataset[ , cociente_18 := (mcuentas_saldo/mpasivos_margen) ]
+  dataset[ , cociente_19 := (mcuentas_saldo/mrentabilidad) ]
+  dataset[ , cociente_20 := (mcuentas_saldo/cdescubierto_preacordado) ]
+  dataset[ , cociente_21 := (mcuentas_saldo/cpayroll_trx) ]
+  
+  dataset[ , cociente_22 := (Visa_status/Master_status) ]
+  dataset[ , cociente_23 := (Visa_status/cprestamos_personales) ]
+  dataset[ , cociente_24 := (Visa_status/mprestamos_personales) ]
+  dataset[ , cociente_25 := (Visa_status/ctarjeta_master_debitos_automaticos) ]
+  dataset[ , cociente_26 := (Visa_status/mcaja_ahorro) ]
+  dataset[ , cociente_27 := (Visa_status/mpasivos_margen) ]
+  dataset[ , cociente_28 := (Visa_status/mrentabilidad) ]
+  dataset[ , cociente_29 := (Visa_status/cdescubierto_preacordado) ]
+  dataset[ , cociente_30 := (Visa_status/cpayroll_trx) ]
+  
+  dataset[ , cociente_31 := (Master_status/cprestamos_personales) ]
+  dataset[ , cociente_32 := (Master_status/mprestamos_personales) ]
+  dataset[ , cociente_33 := (Master_status/ctarjeta_master_debitos_automaticos) ]
+  dataset[ , cociente_34 := (Master_status/mcaja_ahorro) ]
+  dataset[ , cociente_35 := (Master_status/mpasivos_margen) ]
+  dataset[ , cociente_36 := (Master_status/mrentabilidad )]
+  dataset[ , cociente_37 := (Master_status/cdescubierto_preacordado) ]
+  dataset[ , cociente_38 := (Master_status/cpayroll_trx) ]
+  
+  dataset[ , cociente_39 := (cprestamos_personales/mprestamos_personales) ]
+  dataset[ , cociente_40 := (cprestamos_personales/ctarjeta_master_debitos_automaticos) ]
+  dataset[ , cociente_41 := (cprestamos_personales/mcaja_ahorro) ]
+  dataset[ , cociente_42 := (cprestamos_personales/mpasivos_margen) ]
+  dataset[ , cociente_43 := (cprestamos_personales/mrentabilidad) ]
+  dataset[ , cociente_44 := (cprestamos_personales/cdescubierto_preacordado) ]
+  dataset[ , cociente_45 := (cprestamos_personales/cpayroll_trx) ]
+  
+  dataset[ , cociente_46 := (mprestamos_personales/ctarjeta_master_debitos_automaticos) ]
+  dataset[ , cociente_47 := (mprestamos_personales/mcaja_ahorro) ]
+  dataset[ , cociente_48 := (mprestamos_personales/mpasivos_margen) ]
+  dataset[ , cociente_49 := (mprestamos_personales/mrentabilidad )]
+  dataset[ , cociente_50 := (mprestamos_personales/cdescubierto_preacordado) ]
+  dataset[ , cociente_51 := (mprestamos_personales/cpayroll_trx) ]
+  
+  dataset[ , cociente_52 := (ctarjeta_master_debitos_automaticos/mcaja_ahorro) ]
+  dataset[ , cociente_53 := (ctarjeta_master_debitos_automaticos/mpasivos_margen) ]
+  dataset[ , cociente_54 := (ctarjeta_master_debitos_automaticos/mrentabilidad) ]
+  dataset[ , cociente_55 := (ctarjeta_master_debitos_automaticos/cdescubierto_preacordado) ]
+  dataset[ , cociente_56 := (ctarjeta_master_debitos_automaticos/cpayroll_trx) ]
+  
+  dataset[ , cociente_57 := (mcaja_ahorro/mpasivos_margen) ]
+  dataset[ , cociente_58 := (mcaja_ahorro/mrentabilidad) ]
+  dataset[ , cociente_59 := (mcaja_ahorro/cdescubierto_preacordado) ]
+  dataset[ , cociente_60 := (mcaja_ahorro/cpayroll_trx) ]
+  
+  dataset[ , cociente_61 := (mpasivos_margen/mrentabilidad) ]
+  dataset[ , cociente_62 := (mpasivos_margen/cdescubierto_preacordado) ]
+  dataset[ , cociente_63 := (mpasivos_margen/cpayroll_trx) ]
+  
+  dataset[ , cociente_64 := (mrentabilidad/cdescubierto_preacordado) ]
+  dataset[ , cociente_65 := (mrentabilidad/cpayroll_trx) ]
+  
+  dataset[ , cociente_66 := (cdescubierto_preacordado/cpayroll_trx) ]
+  
   #valvula de seguridad para evitar valores infinitos
   #paso los infinitos a NULOS
   infinitos      <- lapply(names(dataset),function(.name) dataset[ , sum(is.infinite(get(.name)))])
@@ -190,8 +278,8 @@ drift_rank_cero_fijo  <- function( campos_drift )
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #Aqui comienza el programa
-
-setwd("~/buckets/b1")
+setwd("C:\\Users\\alfie\\OneDrive\\Documentos\\Maestria_DM\\Materias\\DMEyF_22\\")
+#setwd("~/buckets/b1")
 
 #cargo el dataset donde voy a entrenar
 #esta en la carpeta del exp_input y siempre se llama  dataset.csv.gz
@@ -207,7 +295,7 @@ setwd(paste0( "./exp/", PARAM$experimento, "/"))   #Establezco el Working Direct
 #primero agrego las variables manuales
 AgregarVariables( dataset )
 
-#ordeno de esta forma por el ranking
+#ordeno de esta forma por el ranking (mes y cliente)
 setorder( dataset, foto_mes, numero_de_cliente )
 
 #por como armé los nombres de campos, estos son los campos que expresan variables monetarias
@@ -225,7 +313,9 @@ PARAM$metodo,
 )
 
 
-
+ncol(dataset)
+nrow(dataset)
+155+48-2
 fwrite( dataset,
-        file="dataset.csv.gz",
+        file="dataset_rcf_fe.csv.gz",
         sep= "," )
