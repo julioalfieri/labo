@@ -14,13 +14,13 @@ require("lightgbm")
 
 #Parametros del script
 PARAM  <- list()
-PARAM$experimento  <- "ZZ9411"
-PARAM$exp_input  <- "HT9421"
+PARAM$experimento  <- "ZZ99113"
+PARAM$exp_input  <- "HT94113"
 
-PARAM$modelos  <- 2
+PARAM$modelos  <- 1
 # FIN Parametros del script
 
-ksemillas  <- c(100019, 110119, 111119, 111919, 900019)
+ksemillas  <- c(100019, 110119, 111119, 111919, 900019, 688201, 869293, 840341, 550439, 482861)
 
 #------------------------------------------------------------------------------
 options(error = function() { 
@@ -31,8 +31,7 @@ options(error = function() {
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
-base_dir <- "C:\\Users\\alfie\\OneDrive\\Documentos\\Maestria_DM\\Materias\\DMEyF_22\\"
-#base_dir <- "~/buckets/b1/"
+base_dir <- "~/buckets/b1/"
 
 #creo la carpeta donde va el experimento
 dir.create( paste0( base_dir, "exp/exp_col/", PARAM$experimento, "/"), showWarnings = FALSE )
