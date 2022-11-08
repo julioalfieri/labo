@@ -21,9 +21,9 @@ require("mlrMBO")
 
 #Parametros del script
 PARAM  <- list()
-PARAM$experimento <- "HT94114"
+PARAM$experimento <- "HT94115"
 
-PARAM$exp_input  <- "TS93114"
+PARAM$exp_input  <- "TS93115"
 # FIN Parametros del script
 
 
@@ -332,6 +332,11 @@ setwd("~/buckets/b1/")
 #esta en la carpeta del exp_input y siempre se llama  dataset_training.csv.gz
 dataset_input  <- paste0( "./exp/exp_col/", PARAM$exp_input, "/dataset_training.csv.gz" )
 dataset  <- fread( dataset_input )
+
+
+nrow(dataset[fold_train==1])
+ncol(dataset)
+dataset[fold_train==1, .N, clase_ternaria]
 
 #Verificaciones
 if( ! ("fold_train"    %in% colnames(dataset) ) ) stop("Error, el dataset no tiene el campo fold_train \n")
