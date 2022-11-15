@@ -119,7 +119,7 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
                           weight=  dataset[ , ifelse( clase_ternaria %in% c("BAJA+2"), 1.0000001, 1.0)],
                           free_raw_data= FALSE
   )
-  timestamp()
+ 
   
   #elimino los parametros que no son de lightgbm
   parametros$experimento  <- NULL
@@ -142,7 +142,7 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
   modelo_final  <- lightgbm( data= dtrain,
                              param=  parametros,
                              verbose= -100 )
-  timestamp()
+  
   
   
   message("Prediciendo")
@@ -150,7 +150,7 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
   #genero la prediccion, Scoring
   prediccion  <- predict( modelo_final,
                           data.matrix( dfuture[ , campos_buenos, with=FALSE ] ) )
-  timestamp()
+ 
   
   tb_prediccion  <- dfuture[  , list( numero_de_cliente, foto_mes ) ]
   tb_prediccion[ , prob := prediccion ]
