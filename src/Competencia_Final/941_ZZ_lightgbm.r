@@ -61,7 +61,7 @@ arch_dataset  <- paste0( base_dir, "exp/comp_final/", TS, "/dataset_train_final.
 dataset  <- fread( arch_dataset )
 
 #leo el dataset donde voy a aplicar el modelo final
-arch_future  <- paste0( base_dir, "exp/", TS, "/dataset_future.csv.gz" )
+arch_future  <- paste0( base_dir, "exp/comp_final/", TS, "/dataset_future.csv.gz" )
 dfuture <- fread( arch_future )
 
 
