@@ -24,7 +24,7 @@ PARAM$modelo <- 1 # se usa el mejor de la OB, pero a futuro podria variar esto
 PARAM$semilla_primos <- 100019
 PARAM$semillerio <- 100 # ¿De cuanto será nuestro semillerio?
 PARAM$indice_inicio_semilla <- 1
-PARAM$indice_fin_semilla <- 10
+PARAM$indice_fin_semilla <- 50
 # FIN Parametros del script
 
 # genero un vector de una cantidad de PARAM$semillerio  de semillas,  buscando numeros primos al azar
@@ -32,7 +32,8 @@ primos <- generate_primes(min = 100000, max = 1000000) # genero TODOS los numero
 set.seed(PARAM$semilla_primos) # seteo la semilla que controla al sample de los primos
 ksemillas <- sample(primos)[1:PARAM$semillerio] # me quedo con  PARAM$semillerio primos al azar
 ksemillas_used <- ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
-count <- length(ksemillas_used)
+count <- (length(ksemillas_used) - 10)
+
 #------------------------------------------------------------------------------
 options(error = function() { 
   traceback(20); 

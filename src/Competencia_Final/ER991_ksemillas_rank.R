@@ -12,7 +12,7 @@ require("data.table")
 
 #Parametros del script
 PARAM <- list()
-PARAM$dataset  <- "datasets/competenciaFINAL_2022.csv.gz"
+PARAM$dataset  <- "./datasets/competenciaFINAL_2022.csv.gz"
 PARAM$experimento <- "ER9910"
 PARAM$exp_input <- "ZZ9910"
 
@@ -44,7 +44,7 @@ for (semilla in semillas){
   data_semilla <- fread(paste0('./exp/comp_final/',PARAM$exp_input,'/',PARAM$exp_input,semilla,'_resultados.csv'))
   data_semilla <- data_semilla[ ,c("numero_de_cliente", "rank")] #"rank" ó "prob"
   colnames(data_semilla) <- c("numero_de_cliente", semilla)
-  data_eval <- data_semilla[data_eval, on = c("numero_de_cliente")]  
+  data_eval <- data_eval[data_semilla, on = c("numero_de_cliente")]  
 }
 
 #calculo la media del rank por numero de cliente
