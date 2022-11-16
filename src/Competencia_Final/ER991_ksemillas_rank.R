@@ -60,7 +60,7 @@ setwd(paste0( "./exp/comp_final/", PARAM$experimento, "/"))   #Establezco el Wor
 
 
 #genero los archivos para Kaggle
-cortes  <- seq( from=  6000,
+cortes  <- seq( from=  5000,
                 to=    11000,
                 by=     500 )
 

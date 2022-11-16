@@ -15,15 +15,15 @@ require("primes")
 
 #Parametros del script
 PARAM <- list()
-PARAM$experimento <- "ZZ9910_prueba1"
-PARAM$exp_input <- "HT9411"
+PARAM$experimento <- "ZZ9910"
+PARAM$exp_input <- "HT9410"
 
 # PARAM$modelos  <- 2
 PARAM$modelo <- 1 # se usa el mejor de la OB, pero a futuro podria variar esto
 PARAM$semilla_primos <- 100019
 PARAM$semillerio <- 100 # ¿De cuanto será nuestro semillerio?
 PARAM$indice_inicio_semilla <- 1
-PARAM$indice_fin_semilla <- 3
+PARAM$indice_fin_semilla <- 80
 # FIN Parametros del script
 
 # genero un vector de una cantidad de PARAM$semillerio  de semillas,  buscando numeros primos al azar
@@ -31,7 +31,8 @@ primos <- generate_primes(min = 100000, max = 1000000) # genero TODOS los numero
 set.seed(PARAM$semilla_primos) # seteo la semilla que controla al sample de los primos
 ksemillas <- sample(primos)[1:PARAM$semillerio] # me quedo con  PARAM$semillerio primos al azar
 ksemillas_used <- ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
-count <- length(ksemillas_used)
+#count <- length(ksemillas_used)
+count <- (length(ksemillas_used) - 50)
 #------------------------------------------------------------------------------
 options(error = function() { 
   traceback(20); 
@@ -46,7 +47,7 @@ base_dir <- "~/buckets/b1/"
 
 #creo la carpeta donde va el experimento
 dir.create( paste0( base_dir, "exp/comp_final/", PARAM$experimento, "/"), showWarnings = FALSE )
-setwd(paste0( base_dir, "exp/", PARAM$experimento, "/"))   #Establezco el Working Directory DEL EXPERIMENTO
+setwd(paste0( base_dir, "exp/comp_final/", PARAM$experimento, "/"))   #Establezco el Working Directory DEL EXPERIMENTO
 
 #leo la salida de la optimizaciob bayesiana
 arch_log  <- paste0( base_dir, "exp/comp_final/", PARAM$exp_input, "/BO_log.txt" )
@@ -60,7 +61,7 @@ arch_TS  <- paste0( base_dir, "exp/comp_final/", PARAM$exp_input, "/TrainingStra
 TS  <- readLines( arch_TS, warn=FALSE )
 
 #leo el dataset donde voy a entrenar el modelo final
-arch_dataset  <- paste0( base_dir, "exp/", TS, "/dataset_train_final.csv.gz" )
+arch_dataset  <- paste0( base_dir, "exp/comp_final/", TS, "/dataset_train_final.csv.gz" )
 dataset  <- fread( arch_dataset )
 
 #leo el dataset donde voy a aplicar el modelo final
