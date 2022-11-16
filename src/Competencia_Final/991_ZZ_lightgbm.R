@@ -16,22 +16,23 @@ require("primes")
 
 #Parametros del script
 PARAM <- list()
-PARAM$experimento <- "ZZ9411"
+PARAM$experimento <- "ZZ9910"
 PARAM$exp_input <- "HT9410"
 
-
+# PARAM$modelos  <- 2
 PARAM$modelo <- 1 # se usa el mejor de la OB, pero a futuro podria variar esto
 PARAM$semilla_primos <- 100019
 PARAM$semillerio <- 100 # ¿De cuanto será nuestro semillerio?
 PARAM$indice_inicio_semilla <- 1
-PARAM$indice_fin_semilla <- 1
+PARAM$indice_fin_semilla <- 10
 # FIN Parametros del script
 
 # genero un vector de una cantidad de PARAM$semillerio  de semillas,  buscando numeros primos al azar
 primos <- generate_primes(min = 100000, max = 1000000) # genero TODOS los numeros primos entre 100k y 1M
 set.seed(PARAM$semilla_primos) # seteo la semilla que controla al sample de los primos
 ksemillas <- sample(primos)[1:PARAM$semillerio] # me quedo con  PARAM$semillerio primos al azar
-
+ksemillas_used <- ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
+count <- length(ksemillas_used)
 #------------------------------------------------------------------------------
 options(error = function() { 
   traceback(20); 
@@ -41,7 +42,7 @@ options(error = function() {
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 #Aqui empieza el programa
-
+#base_dir <- "C:/Users/alfie/OneDrive/Documentos/Maestria_DM/Materias/DMEyF_22/"
 base_dir <- "~/buckets/b1/"
 
 #creo la carpeta donde va el experimento
@@ -52,6 +53,8 @@ setwd(paste0( base_dir, "exp/comp_final/", PARAM$experimento, "/"))   #Establezc
 arch_log  <- paste0( base_dir, "exp/comp_final/", PARAM$exp_input, "/BO_log.txt" )
 tb_log  <- fread( arch_log )
 setorder( tb_log, -ganancia )
+IB <- tb_log[PARAM$modelo]$iteracion_bayesiana
+cat(IB,file="Iteración_bayesiana.txt") #Guardo el rank de la iter Bayesiana usada
 
 #leo el nombre del expermento de la Training Strategy
 arch_TS  <- paste0( base_dir, "exp/comp_final/", PARAM$exp_input, "/TrainingStrategy.txt" )
@@ -71,30 +74,14 @@ dataset[ , clase01 := ifelse( clase_ternaria %in% c("BAJA+1","BAJA+2"), 1, 0 )  
 
 campos_buenos  <- setdiff( colnames(dataset), c( "clase_ternaria", "clase01") )
 
-#tb_semillerio_proba <- dfuture[, list(numero_de_cliente, foto_mes)]
-#tb_semillerio_rank <- dfuture[, list(numero_de_cliente, foto_mes)]
-
 # Guardo las semillas Y EL ORDEN en que son usadas
-write.csv(ksemillas, file = "ksemillas.csv", row.names = FALSE)
+write.csv(ksemillas_used, file = "ksemillas.csv", row.names = FALSE)
 
 #genero un modelo para cada uno de las modelos_qty MEJORES iteraciones de la Bayesian Optimization
 for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla] )
 {
   
   # optimización: si los archivos ya existen, puedo hacer skip de esta semilla
-  nom_submit <- paste0(
-    PARAM$experimento,
-    "_",
-    sprintf("%d", ksemilla),
-    ".csv"
-  )
-  
-  nom_submit_rank <- paste0(
-    PARAM$experimento,
-    "_",
-    sprintf("%d", ksemilla),
-    "_rank.csv"
-  )
   
   nom_resultados <- paste0(
     PARAM$experimento,
@@ -104,23 +91,25 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
   )
   
   # Salteo las semillas ya procesadas
-  if (file.exists(nom_submit) && file.exists(nom_submit_rank) && file.exists(nom_resultados)) {
+  if ( file.exists(nom_resultados)) {
     next # si, podría ser mas sofisticado, pero queda para el refactor
   }
   
-  message("procesando semilla ", ksemilla) # un poco de debug
+  message("procesando semilla ", ksemilla)# un poco de debug
+  message("Faltan ", count)
+  timestamp()
   parametros <- as.list(copy(tb_log[PARAM$modelo]))
   iteracion_bayesiana  <- parametros$iteracion_bayesiana
   
   message("Creando dataset ")
-  timestamp()
+  
   #creo CADA VEZ el dataset de lightgbm
   dtrain  <- lgb.Dataset( data=    data.matrix( dataset[ , campos_buenos, with=FALSE] ),
                           label=   dataset[ , clase01],
                           weight=  dataset[ , ifelse( clase_ternaria %in% c("BAJA+2"), 1.0000001, 1.0)],
                           free_raw_data= FALSE
   )
-  timestamp()
+  
   
   #elimino los parametros que no son de lightgbm
   parametros$experimento  <- NULL
@@ -138,14 +127,13 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
   #genero el modelo entrenando en los datos finales
   set.seed( parametros$seed )
   message("Entrenando el final model")
-  timestamp()
+  
   modelo_final  <- lightgbm( data= dtrain,
                              param=  parametros,
                              verbose= -100 )
-  timestamp()
   
   message("Prediciendo")
-  timestamp()
+  
   #genero la prediccion, Scoring
   prediccion  <- predict( modelo_final,
                           data.matrix( dfuture[ , campos_buenos, with=FALSE ] ) )
@@ -167,7 +155,7 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
   #genero los archivos para Kaggle
   cortes  <- seq( from=  7000,
                   to=    11000,
-                  by=       500)
+                  by=     500 )
   
   setorder( tb_prediccion, -prob )
   setorder(tb_prediccion_rank, prediccion) # Esto es un ranking, entonces de menor a mayor
@@ -179,6 +167,22 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
     
     tb_prediccion_rank[, Predicted := 0L]
     tb_prediccion_rank[1:corte, Predicted := 1L]
+    
+    
+    nom_submit  <- paste0( PARAM$experimento, 
+                           "_",
+                           sprintf("%d", ksemilla),
+                           "_",
+                           sprintf( "%05d", corte ),
+                           ".csv" )
+    
+    nom_submit_rank  <- paste0( PARAM$experimento, 
+                                "_",
+                                sprintf("%d", ksemilla),
+                                "_",
+                                sprintf( "%05d", corte ),
+                                "_rank.csv" )
+    
     
     # Guardo el submit individual
     fwrite(  tb_prediccion[ , list( numero_de_cliente, Predicted ) ],
@@ -192,7 +196,7 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
     )
     
   }
-  
+  count <- count - 1
   #borro y limpio la memoria para la vuelta siguiente del for
   rm( tb_prediccion )
   rm( modelo_final)
