@@ -8,6 +8,7 @@
 #limpio la memoria
 rm( list=ls() )  #remove all objects
 gc()             #garbage collection
+
 require("data.table")
 
 require("lightgbm")
@@ -15,7 +16,7 @@ require("primes")
 
 #Parametros del script
 PARAM <- list()
-PARAM$experimento <- "ZZ9410"
+PARAM$experimento <- "ZZ9411"
 PARAM$exp_input <- "HT9410"
 
 
@@ -23,7 +24,7 @@ PARAM$modelo <- 1 # se usa el mejor de la OB, pero a futuro podria variar esto
 PARAM$semilla_primos <- 100019
 PARAM$semillerio <- 100 # ¿De cuanto será nuestro semillerio?
 PARAM$indice_inicio_semilla <- 1
-PARAM$indice_fin_semilla <- 10
+PARAM$indice_fin_semilla <- 1
 # FIN Parametros del script
 
 # genero un vector de una cantidad de PARAM$semillerio  de semillas,  buscando numeros primos al azar
@@ -119,7 +120,7 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
                           weight=  dataset[ , ifelse( clase_ternaria %in% c("BAJA+2"), 1.0000001, 1.0)],
                           free_raw_data= FALSE
   )
- 
+  timestamp()
   
   #elimino los parametros que no son de lightgbm
   parametros$experimento  <- NULL
@@ -131,7 +132,6 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
   parametros$ganancia     <- NULL
   parametros$iteracion_bayesiana  <- NULL
   
-  
   #Utilizo la semilla definida en este script
   parametros$seed  <- ksemilla
   
@@ -142,15 +142,14 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
   modelo_final  <- lightgbm( data= dtrain,
                              param=  parametros,
                              verbose= -100 )
-  
-  
+  timestamp()
   
   message("Prediciendo")
   timestamp()
   #genero la prediccion, Scoring
   prediccion  <- predict( modelo_final,
                           data.matrix( dfuture[ , campos_buenos, with=FALSE ] ) )
- 
+  timestamp()
   
   tb_prediccion  <- dfuture[  , list( numero_de_cliente, foto_mes ) ]
   tb_prediccion[ , prob := prediccion ]
@@ -166,9 +165,9 @@ for( ksemilla in ksemillas[PARAM$indice_inicio_semilla:PARAM$indice_fin_semilla]
   )
   
   #genero los archivos para Kaggle
-  cortes  <- seq( from=  8000,
-                  to=    10000,
-                  by=        500 )
+  cortes  <- seq( from=  7000,
+                  to=    11000,
+                  by=       500)
   
   setorder( tb_prediccion, -prob )
   setorder(tb_prediccion_rank, prediccion) # Esto es un ranking, entonces de menor a mayor
