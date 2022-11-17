@@ -79,7 +79,7 @@ hs <- makeParamSet(
 
 
 #si usted es ambicioso, y tiene paciencia, podria subir este valor a 100
-kBO_iteraciones  <- 10  #iteraciones de la Optimizacion Bayesiana
+kBO_iteraciones  <- 5  #iteraciones de la Optimizacion Bayesiana
 
 #------------------------------------------------------------------------------
 #graba a un archivo los componentes de lista
@@ -311,7 +311,7 @@ setwd("~/buckets/b1/")
 #esta en la carpeta del exp_input y siempre se llama  dataset_training.csv.gz
 dataset_input  <- paste0( "./exp/comp_final/", PARAM$exp_input, "/dataset_training.csv.gz" )
 dataset  <- fread( dataset_input )
-
+dataset[fold_validate==1, .N]
 #Verificaciones
 if( ! ("fold_train"    %in% colnames(dataset) ) ) stop("Error, el dataset no tiene el campo fold_train \n")
 if( ! ("fold_validate" %in% colnames(dataset) ) ) stop("Error, el dataset no tiene el campo fold_validate \n")
