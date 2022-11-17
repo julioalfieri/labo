@@ -28,7 +28,7 @@ PARAM$train$training     <- c( 201901, 201902, 201903, 201904, 201905, 201906, 2
                                202001,202002, 202003, 202004, 202005, 202007, 202008, 202010,202011,202012,
                                202101,202102,202103,202104,202105, 202106, 202107)
 PARAM$train$validation   <- c( 201909 )
-PARAM$train$testing      <- c( 202009, )
+PARAM$train$testing      <- c( 202009)
 PARAM$train$undersampling  <- 0.2   # 1.0 significa NO undersampling ,  0.1  es quedarse con el 10% de los CONTINUA
 PARAM$train$semilla  <- 900019
 # FIN Parametros del script
