@@ -19,7 +19,7 @@ require("lightgbm")
 
 #Parametros del script
 PARAM  <- list()
-PARAM$experimento <- "FE9252"
+PARAM$experimento <- "FE9253"
 
 PARAM$exp_input  <- "DR9140"
 
@@ -27,7 +27,7 @@ PARAM$lag1  <- TRUE
 PARAM$lag2  <- TRUE
 PARAM$Tendencias  <- TRUE
 PARAM$RandomForest  <- TRUE          #No se puede poner en TRUE para la entrega oficial de la Tercera Competencia
-PARAM$CanaritosAsesinos  <- FALSE
+PARAM$CanaritosAsesinos  <- TRUE
 # FIN Parametros del script
 
 #------------------------------------------------------------------------------
@@ -163,7 +163,9 @@ AgregaVarRandomForest  <- function( num.trees, max.depth, min.node.size, mtry)
 
   dataset_rf  <- copy( dataset[ , campos_buenos, with=FALSE] )
   azar  <- runif( nrow(dataset_rf) )
-  dataset_rf[ , entrenamiento := as.integer( foto_mes>= 202101 &  foto_mes<= 202107 & ( clase01==1 | azar < 0.10 )) ]
+  dataset_rf[ , entrenamiento := as.integer( foto_mes== 201909 &  foto_mes== 202009 &
+                                               foto_mes== 202101 &  foto_mes== 202103 & foto_mes== 202104 & foto_mes== 202105 &
+                                               foto_mes== 202107  & ( clase01==1 | azar < 0.10 )) ]
 
   #imputo los nulos, ya que ranger no acepta nulos
   #Leo Breiman, ¿por que le temias a los nulos?
@@ -246,8 +248,7 @@ CanaritosAsesinos  <- function( canaritos_ratio=0.2 )
   campos_buenos  <- setdiff( colnames(dataset), c("clase_ternaria","clase01", "foto_mes" ) )
 
   azar  <- runif( nrow(dataset) )
-  dataset[ , entrenamiento := foto_mes==201909 & foto_mes==202009 &foto_mes== 202101 &  foto_mes==202103  & 
-             foto_mes==202104 & foto_mes==202105 & foto_mes==202107  &  ( clase01==1 | azar < 0.10 ) ]
+  dataset[ , entrenamiento := foto_mes>= 202101 &  foto_mes<= 202103  & ( clase01==1 | azar < 0.10 ) ]
 
   dtrain  <- lgb.Dataset( data=    data.matrix(  dataset[ entrenamiento==TRUE, campos_buenos, with=FALSE]),
                           label=   dataset[ entrenamiento==TRUE, clase01],
@@ -412,5 +413,3 @@ fwrite( dataset,
         "dataset.csv.gz",
         logical01= TRUE,
         sep= "," )
-
-ncol(dataset)
