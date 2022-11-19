@@ -163,9 +163,9 @@ AgregaVarRandomForest  <- function( num.trees, max.depth, min.node.size, mtry)
 
   dataset_rf  <- copy( dataset[ , campos_buenos, with=FALSE] )
   azar  <- runif( nrow(dataset_rf) )
-  dataset_rf[ , entrenamiento := as.integer( foto_mes== 201909 &  foto_mes== 202009 &
-                                               foto_mes== 202101 &  foto_mes== 202103 & foto_mes== 202104 & foto_mes== 202105 &
-                                               foto_mes== 202107  & ( clase01==1 | azar < 0.10 )) ]
+  dataset_rf[ , entrenamiento := as.integer( (foto_mes== 201909 |  foto_mes== 202009 |
+                                               foto_mes== 202101 |  foto_mes== 202103 | foto_mes== 202104 | foto_mes== 202105 |
+                                               foto_mes== 202107)  & ( clase01==1 | azar < 0.10 )) ]
 
   #imputo los nulos, ya que ranger no acepta nulos
   #Leo Breiman, ¿por que le temias a los nulos?
@@ -413,3 +413,5 @@ fwrite( dataset,
         "dataset.csv.gz",
         logical01= TRUE,
         sep= "," )
+
+ncol(dataset)
